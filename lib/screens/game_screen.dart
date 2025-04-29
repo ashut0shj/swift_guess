@@ -36,7 +36,7 @@ class _GameScreenState extends State<GameScreen> {
     'DAYLIGHT', 'CALL IT WHAT YOU WANT', 'GETAWAY CAR',
     'DOROTHEA', 'BETTY', 'MISS AMERICANA', 'LONG LIVE', 'THE STORY OF US',
     'WHITE HORSE', 'SPARKS FLY', 'DEAR JOHN', 'HAUNTED',
-    'Ours', 'CHANGE', 'JUMP THEN FALL', 'FEARLESS', 'HOLY GROUND',
+    'OURS', 'CHANGE', 'JUMP THEN FALL', 'FEARLESS', 'HOLY GROUND',
     'THE LAST TIME', 'KING OF MY HEART', 'I WISH YOU WOULD',
     'OUT OF THE WOODS', 'BAD BLOOD'
   ];
@@ -57,7 +57,6 @@ class _GameScreenState extends State<GameScreen> {
   
   // Animation states
   bool _showCelebration = false;
-  bool _showRevealAll = false;
   bool _isRevealingLetters = false;
   late ConfettiController _confettiController;
   
@@ -86,7 +85,6 @@ class _GameScreenState extends State<GameScreen> {
       _guessed.clear();
       _hintsUsed = 0;     // Reset hints used
       _showCelebration = false;
-      _showRevealAll = false;
       _isRevealingLetters = false;
       _gameOver = false;
       _dialogShown = false;
@@ -164,7 +162,6 @@ class _GameScreenState extends State<GameScreen> {
     }
     
     // Show overlay with song name
-    setState(() => _showRevealAll = true);
     
     // Check high score
     if (_score > _highScore) {
@@ -228,7 +225,6 @@ class _GameScreenState extends State<GameScreen> {
       setState(() {
         _dialogShown = false;
         _showCelebration = false;
-        _showRevealAll = false;
         _isNewHighScore = false;
       });
     }
@@ -255,8 +251,6 @@ class _GameScreenState extends State<GameScreen> {
   
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    
     return Stack(
       children: [
         Scaffold(
@@ -268,11 +262,11 @@ class _GameScreenState extends State<GameScreen> {
               children: [
                 Image.asset(
                   'assets/images/home_image.png',
-                  width: 30,
-                  height: 30,
+                  width: MediaQuery.of(context).size.width * 0.07,
+                  height: MediaQuery.of(context).size.width * 0.07,
                   errorBuilder: (context, error, stackTrace) => const Icon(Icons.music_note),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
                 const Text('Swift Guess', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white,)),
               ],
             ),
@@ -283,57 +277,97 @@ class _GameScreenState extends State<GameScreen> {
               gradient: LinearGradient(
                 colors: [
                   const Color(0xFF18122B),
-                  Colors.purple.shade900.withOpacity(0.7),
+                  Colors.purple.shade900,
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
             ),
             child: SafeArea(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    child: Column(
-                      children: [
-                        GameOptions(
-                          difficulty: _difficulty,
-                          score: _score,
-                          highScore: _highScore,
-                          hintUsed: _hintsUsed > 0,  // For backward compatibility
-                          hintsRemaining: _maxHints - _hintsUsed,  // New property
-                          hintStatus: _hintStatusText,  // New property
-                          gameOver: _gameOver,
-                          onDifficultyChanged: _changeDifficulty,
-                          onHintPressed: _useHint,
-                        ),
-                        const SizedBox(height: 20),
-                        HeartsDisplay(lives: _lives, difficulty: _difficulty),
-                        const SizedBox(height: 30),
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(16),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final double horizontalPadding = constraints.maxWidth * 0.04;
+                  
+                  return Column(
+                    children: [
+                      // Content area (scrollable if needed)
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const ClampingScrollPhysics(),
+                          child: Column(
+                            children: [
+                              // Game options section
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPadding,
+                                  vertical: constraints.maxHeight * 0.02,
+                                ),
+                                child: GameOptions(
+                                  difficulty: _difficulty,
+                                  score: _score,
+                                  highScore: _highScore,
+                                  hintUsed: _hintsUsed > 0,
+                                  hintsRemaining: _maxHints - _hintsUsed,
+                                  hintStatus: _hintStatusText,
+                                  gameOver: _gameOver,
+                                  onDifficultyChanged: _changeDifficulty,
+                                  onHintPressed: _useHint,
+                                ),
+                              ),
+                                                            SizedBox(height: constraints.maxHeight * 0.005),
+
+                              // Hearts display
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPadding,
+                                ),
+                                child: HeartsDisplay(lives: _lives, difficulty: _difficulty),
+                              ),
+                              
+                              SizedBox(height: constraints.maxHeight * 0.005),
+                              
+                              // Word display container
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalPadding,
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: constraints.maxHeight * 0.03,
+                                    horizontal: horizontalPadding,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: WordDisplay(answer: _answer, guessed: _guessed),
+                                ),
+                              ),
+                              
+                              // Space for keyboard
+                              SizedBox(height: constraints.maxHeight * 0.03),
+                            ],
                           ),
-                          child: WordDisplay(answer: _answer, guessed: _guessed),
                         ),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-                  // Full width keyboard with minimal padding
-                  SizedBox(
-                    width: screenWidth,
-                    child: KeyboardWidget(
-                      onKeyPressed: _guessLetter,
-                      answer: _answer,
-                      guessed: _guessed,
-                      gameOver: _gameOver || _isRevealingLetters,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                      ),
+                      
+                      // Keyboard always at bottom
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: horizontalPadding * 0.5,
+                          right: horizontalPadding * 0.5,
+                          bottom: constraints.maxHeight * 0.01,
+                        ),
+                        child: KeyboardWidget(
+                          onKeyPressed: _guessLetter,
+                          answer: _answer,
+                          guessed: _guessed,
+                          gameOver: _gameOver || _isRevealingLetters,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),

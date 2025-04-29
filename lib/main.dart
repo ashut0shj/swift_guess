@@ -6,10 +6,12 @@ import 'jingle_player.dart'; // import your jingle player
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // ensures async init is ready
   JinglePlayer().play(); // start background music
-  runApp(SwiftieGame());
+  runApp(const SwiftieGame());
 }
 
 class SwiftieGame extends StatelessWidget {
+  const SwiftieGame({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

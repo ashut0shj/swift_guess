@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class GameOptions extends StatelessWidget {
   final String difficulty;
@@ -26,109 +27,177 @@ class GameOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        // Difficulty dropdown
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.purple.shade800,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: DropdownButton<String>(
-            value: difficulty,
-            dropdownColor: Colors.purple.shade900,
-            underline: Container(),
-            style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-            icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
-            items: <String>['Easy', 'Medium', 'Hard']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: gameOver ? null : (String? newValue) {
-              if (newValue != null) {
-                onDifficultyChanged(newValue);
-              }
-            },
-          ),
-        ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Get screen dimensions for responsive sizing
+        final Size screenSize = MediaQuery.of(context).size;
+        final double screenHeight = screenSize.height;
         
-        // Score display
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          decoration: BoxDecoration(
-            color: Colors.purple.shade800,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.star, color: Colors.amber, size: 16),
-                  const SizedBox(width: 4),
-                  Text(
-                    '$score',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  const Icon(Icons.leaderboard, color: Colors.purpleAccent, size: 14),
-                  const SizedBox(width: 4),
-                  Text(
-                    '$highScore',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        // Check for different screen sizes
+        final bool isSmallScreen = screenHeight < 600;
         
-        // Hint button with counter
-        ElevatedButton(
-          onPressed: hintsRemaining <= 0 || gameOver ? null : onHintPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.amber,
-            foregroundColor: Colors.black87,
-            disabledBackgroundColor: Colors.grey.shade400,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.lightbulb_outline, size: 18),
-              const SizedBox(width: 4),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Hint'),
-                  Text(
-                    hintStatus,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
+        // Fixed sizes that don't scale with screen
+        final double fontSize = isSmallScreen ? 12.0 : 16.0;
+        final double smallFontSize = isSmallScreen ? 9.0 : 11.0;
+        final double tinyFontSize = isSmallScreen ? 6.0 : 8.0;
+        final double iconSize = isSmallScreen ? 12.0 : 14.0;
+        final double smallIconSize = isSmallScreen ? 10.0 : 12.0;
+        
+        // Fixed padding values
+        final double horizontalPadding = 8.0;
+        final double verticalPadding = 6.0;
+        
+        final double containerBorderRadius = 8.0;
+        final double itemSpacing = 4.0;
+        
+        // Calculate fixed width for each element
+        final double availableWidth = constraints.maxWidth;
+        final double elementWidth = math.min((availableWidth / 3.2), 120.0);
+        
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // Difficulty dropdown
+            SizedBox(
+              width: elementWidth,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(containerBorderRadius),
+                  color: Colors.purple.shade800,
+                ),
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                child: DropdownButton<String>(
+                  value: difficulty,
+                  dropdownColor: Colors.purple.shade900,
+                  underline: Container(),
+                  isExpanded: true,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fontSize-4,
                   ),
-                ],
+                  icon: Icon(
+                    Icons.arrow_drop_down, 
+                    color: Colors.white,
+                    size: fontSize * 1.2,
+                  ),
+                  items: <String>['Easy', 'Medium', 'Hard']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(fontSize: fontSize),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: gameOver ? null : (String? newValue) {
+                    if (newValue != null) {
+                      onDifficultyChanged(newValue);
+                    }
+                  },
+                ),
               ),
-            ],
-          ),
-        ),
-      ],
+            ),
+            
+            // Score display
+            SizedBox(
+              width: elementWidth,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: verticalPadding, 
+                  horizontal: horizontalPadding,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade800,
+                  borderRadius: BorderRadius.circular(containerBorderRadius),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.star, 
+                          color: Colors.amber, 
+                          size: iconSize
+                        ),
+                        SizedBox(width: itemSpacing),
+                        Text(
+                          '$score',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: fontSize,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: itemSpacing-8 / 2),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.leaderboard, 
+                          color: Colors.purpleAccent, 
+                          size: smallIconSize
+                        ),
+                        SizedBox(width: itemSpacing/4),
+                        Text(
+                          '$highScore',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: smallFontSize,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            
+            // Hint button with counter
+            SizedBox(
+              width: elementWidth,
+              child: ElevatedButton(
+                onPressed: hintsRemaining <= 0 || gameOver ? null : onHintPressed,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  foregroundColor: Colors.black87,
+                  disabledBackgroundColor: Colors.grey.shade400,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, 
+                    vertical: verticalPadding
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.lightbulb_outline, size: iconSize),
+                    SizedBox(width: itemSpacing),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Hint',
+                          style: TextStyle(fontSize: smallFontSize),
+                        ),
+                        Text(
+                          hintStatus,
+                          style: TextStyle(
+                            fontSize: tinyFontSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      }
     );
   }
 }
