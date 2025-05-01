@@ -24,13 +24,13 @@ class _GameScreenState extends State<GameScreen> {
     'THE ARCHER', 'THE MAN', 'AUGUST', 'EXILE', 'WILLOW',
     'CHAMPAGNE PROBLEMS', 'CORNELIA STREET', 'MINE', 'OUR SONG',
     'TEARDROPS ON MY GUITAR', 'BACK TO DECEMBER', 'I KNEW YOU WERE TROUBLE',
-    '22', 'FORTNIGHT', 'DOWN BAD', 'SO LONG LONDON', 'FLORIDA',
+     'FORTNIGHT', 'DOWN BAD', 'SO LONG LONDON', 'FLORIDA',
     'GUILTY AS SIN', 'LOML', 'THE ALBATROSS', 'HOW DID IT END',
     'THE PROPHECY', 'CASSANDRA', 'PETER', 'AFTERGLOW', 'ALL TOO WELL',
     'BREATHE', 'CLEAN', 'CLOSURE', 'HOAX', 'INNOCENT', 'INVISIBLE',
     'MAROON', 'MEAN', 'MIRRORBALL', 'SUBURBAN LEGENDS', 'SUPERSTAR',
     'TREACHEROUS', 'UNTILTED', 'VIGILANTE SHIT', 'DEATH BY A THOUSAND CUTS',
-    'EVERMORE', 'THE 1', 'SEVEN', 'HAPPINESS', 'PEACE',
+    'EVERMORE', 'THE ONE', 'SEVEN', 'HAPPINESS', 'PEACE',
     'GOLD RUSH', 'ITS TIME TO GO', 'TOLERATE IT', 'THIS LOVE',
     'BEGIN AGAIN', 'STAY STAY STAY', 'NEW ROMANTICS',
     'DAYLIGHT', 'CALL IT WHAT YOU WANT', 'GETAWAY CAR',
@@ -290,65 +290,60 @@ class _GameScreenState extends State<GameScreen> {
                   
                   return Column(
                     children: [
-                      // Content area (scrollable if needed)
-                      Expanded(
-                        child: SingleChildScrollView(
-                          physics: const ClampingScrollPhysics(),
-                          child: Column(
-                            children: [
-                              // Game options section
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: horizontalPadding,
-                                  vertical: constraints.maxHeight * 0.02,
-                                ),
-                                child: GameOptions(
-                                  difficulty: _difficulty,
-                                  score: _score,
-                                  highScore: _highScore,
-                                  hintUsed: _hintsUsed > 0,
-                                  hintsRemaining: _maxHints - _hintsUsed,
-                                  hintStatus: _hintStatusText,
-                                  gameOver: _gameOver,
-                                  onDifficultyChanged: _changeDifficulty,
-                                  onHintPressed: _useHint,
-                                ),
-                              ),
-                                                            SizedBox(height: constraints.maxHeight * 0.005),
-
-                              // Hearts display
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: horizontalPadding,
-                                ),
-                                child: HeartsDisplay(lives: _lives, difficulty: _difficulty),
-                              ),
-                              
-                              SizedBox(height: constraints.maxHeight * 0.005),
-                              
-                              // Word display container
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: horizontalPadding,
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: constraints.maxHeight * 0.03,
-                                    horizontal: horizontalPadding,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: WordDisplay(answer: _answer, guessed: _guessed),
-                                ),
-                              ),
-                              
-                              // Space for keyboard
-                              SizedBox(height: constraints.maxHeight * 0.03),
-                            ],
-                          ),
+                      // Game options section - at the top
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                          vertical: constraints.maxHeight * 0.02,
                         ),
+                        child: GameOptions(
+                          difficulty: _difficulty,
+                          score: _score,
+                          highScore: _highScore,
+                          hintUsed: _hintsUsed > 0,
+                          hintsRemaining: _maxHints - _hintsUsed,
+                          hintStatus: _hintStatusText,
+                          gameOver: _gameOver,
+                          onDifficultyChanged: _changeDifficulty,
+                          onHintPressed: _useHint,
+                        ),
+                      ),
+                      
+                      // Hearts display - below game options
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                        ),
+                        child: HeartsDisplay(lives: _lives, difficulty: _difficulty),
+                      ),
+                      
+                      // This expander pushes content down from the top
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(),
+                      ),
+                      
+                      // Word display container - now centered vertically in available space
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: constraints.maxHeight * 0.03,
+                            horizontal: horizontalPadding,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                          ),
+                          child: WordDisplay(answer: _answer, guessed: _guessed),
+                        ),
+                      ),
+                      
+                      // This expander pushes content up from the bottom
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(),
                       ),
                       
                       // Keyboard always at bottom

@@ -11,6 +11,7 @@ class GameOptions extends StatelessWidget {
   final bool gameOver;
   final Function(String) onDifficultyChanged;
   final VoidCallback onHintPressed;
+  final double scaleFactor; // Manual scaling factor
 
   const GameOptions({
     super.key,
@@ -23,6 +24,7 @@ class GameOptions extends StatelessWidget {
     required this.gameOver,
     required this.onDifficultyChanged,
     required this.onHintPressed,
+    this.scaleFactor = 1.0, // Default scale factor of 1.0
   });
 
   @override
@@ -31,28 +33,50 @@ class GameOptions extends StatelessWidget {
       builder: (context, constraints) {
         // Get screen dimensions for responsive sizing
         final Size screenSize = MediaQuery.of(context).size;
+        final double screenWidth = screenSize.width;
         final double screenHeight = screenSize.height;
         
         // Check for different screen sizes
         final bool isSmallScreen = screenHeight < 600;
+        final bool isWideScreen = screenWidth > 480;
         
-        // Fixed sizes that don't scale with screen
-        final double fontSize = isSmallScreen ? 12.0 : 16.0;
-        final double smallFontSize = isSmallScreen ? 9.0 : 11.0;
-        final double tinyFontSize = isSmallScreen ? 6.0 : 8.0;
-        final double iconSize = isSmallScreen ? 12.0 : 14.0;
-        final double smallIconSize = isSmallScreen ? 10.0 : 12.0;
+        // Apply manual scaling factor to all size values
+        // Base font sizes - will be scaled by scaleFactor
+        final double baseFontSize = isSmallScreen ? 12.0 : 16.0;
+        final double baseSmallFontSize = isSmallScreen ? 9.0 : 11.0;
+        final double baseTinyFontSize = isSmallScreen ? 6.0 : 8.0;
+        final double baseIconSize = isSmallScreen ? 12.0 : 14.0;
+        final double baseSmallIconSize = isSmallScreen ? 10.0 : 12.0;
         
-        // Fixed padding values
-        final double horizontalPadding = 8.0;
-        final double verticalPadding = 6.0;
+        // Apply scale factor to get final sizes
+        final double fontSize = baseFontSize * scaleFactor;
+        final double smallFontSize = baseSmallFontSize * scaleFactor;
+        final double tinyFontSize = baseTinyFontSize * scaleFactor;
+        final double iconSize = baseIconSize * scaleFactor;
+        final double smallIconSize = baseSmallIconSize * scaleFactor;
         
-        final double containerBorderRadius = 8.0;
-        final double itemSpacing = 4.0;
+        // Padding and spacing with scale factor applied
+        final double horizontalPadding = 8.0 * scaleFactor;
+        final double verticalPadding = 6.0 * scaleFactor;
+        final double containerBorderRadius = 8.0 * scaleFactor;
+        final double itemSpacing = 4.0 * scaleFactor;
         
-        // Calculate fixed width for each element
+        // Calculate width based on container and scale factor
         final double availableWidth = constraints.maxWidth;
-        final double elementWidth = math.min((availableWidth / 3.2), 120.0);
+        
+        // Adjust element width based on screen size and scale factor
+        double elementWidth;
+        if (isWideScreen) {
+          // For wider screens, use less percentage of total width
+          elementWidth = math.min((availableWidth / 3.5), 120.0 * scaleFactor);
+        } else {
+          // For narrower screens, allow elements to take more space
+          elementWidth = math.min((availableWidth / 3.2), 100.0 * scaleFactor);
+        }
+        
+        // Ensure minimum and maximum size constraints
+        elementWidth = math.max(elementWidth, 60.0 * scaleFactor);
+        elementWidth = math.min(elementWidth, 160.0 * scaleFactor);
         
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,9 +95,10 @@ class GameOptions extends StatelessWidget {
                   dropdownColor: Colors.purple.shade900,
                   underline: Container(),
                   isExpanded: true,
+                  itemHeight: kMinInteractiveDimension * (scaleFactor > 0.8 ? scaleFactor : 0.8),
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: fontSize-4,
+                    fontSize: fontSize - (4 * scaleFactor),
                   ),
                   icon: Icon(
                     Icons.arrow_drop_down, 
@@ -128,11 +153,12 @@ class GameOptions extends StatelessWidget {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: fontSize,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: itemSpacing-8 / 2),
+                    SizedBox(height: itemSpacing / 2),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -141,7 +167,7 @@ class GameOptions extends StatelessWidget {
                           color: Colors.purpleAccent, 
                           size: smallIconSize
                         ),
-                        SizedBox(width: itemSpacing/4),
+                        SizedBox(width: itemSpacing / 2),
                         Text(
                           '$highScore',
                           style: TextStyle(

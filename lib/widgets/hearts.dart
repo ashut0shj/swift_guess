@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:math' as math;
+
 
 class HeartsDisplay extends StatelessWidget {
   final int lives;
   final String difficulty;
+  final double scaleFactor; // Manual scaling factor
 
   const HeartsDisplay({
     super.key,
     required this.lives,
     required this.difficulty,
+    this.scaleFactor = 1, // Default scale factor of 1.0
   });
 
   @override
@@ -24,22 +28,34 @@ class HeartsDisplay extends StatelessWidget {
         final bool isSmallScreen = screenHeight < 600;
         final bool isWideScreen = screenWidth > 480;
         
-        // Calculate padding based on screen size
-        final double verticalPadding = screenHeight * 0.015;
-        final double horizontalPadding = screenWidth * 0.04;
+        // Base sizes before applying scale factor
+        final double baseFontSize = isSmallScreen ? 14.0 : 16.0;
+        final double baseHeartSize = isSmallScreen ? 14.0 : 16.0;
         
-        // Calculate font and icon sizes based on screen dimensions
-        final double fontSize = isSmallScreen ? 14 : isWideScreen ? 16 : screenWidth * 0.04;
-        double heartSize = isSmallScreen ? 14 : isWideScreen ? 16 : screenWidth * 0.04;
+        // Apply scale factor
+        final double fontSize = baseFontSize * scaleFactor;
+        double heartSize = baseHeartSize * scaleFactor;
+        
+        // Calculate padding with scale factor
+        final double verticalPadding = 6.0 * scaleFactor;
+        final double horizontalPadding = 12.0 * scaleFactor;
+        final double heartSpacing = 3.0 * scaleFactor;
+        final double borderRadius = 16.0 * scaleFactor;
         
         // Determine total hearts based on difficulty
         int totalHearts = difficulty == 'Easy' ? 8 : difficulty == 'Hard' ? 4 : 6;
         
-        // For very small screens with many hearts, we might need to adjust further
+        // For many hearts, adjust heart size to fit properly
         if (totalHearts > 6) {
-          // Make hearts even smaller when there are many of them
-          final double screenAdjustment = screenWidth < 360 ? 0.65 : 0.8;
-          heartSize *= screenAdjustment;
+          // Calculate dynamic adjustment based on available width
+          double availableWidth = constraints.maxWidth - (horizontalPadding * 2) - (fontSize * 4); // Approx space for "Lives: " text
+          double maxHeartWidth = availableWidth / totalHearts;
+          
+          // Apply constraint if necessary
+          if (heartSize > maxHeartWidth) {
+            double adjustmentRatio = maxHeartWidth / heartSize;
+            heartSize *= math.min(adjustmentRatio, 1.0);
+          }
         }
         
         return Container(
@@ -49,10 +65,15 @@ class HeartsDisplay extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: Colors.purple.shade900.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(
+              color: Colors.purple.shade800.withOpacity(0.4),
+              width: 1.0 * scaleFactor,
+            ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Lives: ',
@@ -62,13 +83,15 @@ class HeartsDisplay extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(width: 4.0 * scaleFactor),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: List.generate(
                   totalHearts,
                   (i) {
                     return Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.003
+                        horizontal: heartSpacing / 2,
                       ),
                       child: Icon(
                         Icons.favorite,
@@ -99,3 +122,5 @@ class HeartsDisplay extends StatelessWidget {
     );
   }
 }
+
+// Import math for min function
