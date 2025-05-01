@@ -21,13 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadHighScore();
     
-    // Safe initialization that doesn't depend on context
+    
     try {
       _isMusicMuted = JinglePlayer().isMuted;
       _areSfxMuted = JinglePlayer().isMuted;
     } catch (e) {
       print('Error getting jingle player state: $e');
-      // Default values if there's an error
+      
       _isMusicMuted = false;
       _areSfxMuted = false;
     }
@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _preloadAssets() {
-    // Preload the main image
+    
     precacheImage(const AssetImage('assets/images/home_image.png'), context)
       .then((_) {
         if (mounted) {
@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       })
       .catchError((error) {
         print('Error loading image: $error');
-        // Still set to true to prevent infinite loading
+        
         if (mounted) {
           setState(() {
             _imageLoaded = true;
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       print('Error loading high score: $e');
-      // Use default score if there's an error
+      
     }
   }
 
@@ -168,9 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final imageSize = screenHeight * 0.4; // 40% of screen height
+    final imageSize = screenHeight * 0.4; 
 
-    // Show loading screen if image isn't loaded
+    
     if (!_imageLoaded) {
       return Scaffold(
         body: Container(
@@ -202,14 +202,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: SafeArea(
-          child: Stack(  // Wrap in Stack to properly position the footer text
+          child: Stack(  
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
                     const Spacer(flex: 1),
-                    // App Logo/Image
+                    
                     Hero(
                       tag: 'app_logo',
                       child: Image.asset(
@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Title without complex animation
+                    
                     const Text(
                       'Swiftie Guess',
                       style: TextStyle(
@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const Spacer(),
-                    // High Score Display
+                    
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                       decoration: BoxDecoration(
@@ -275,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    // Start Game Button
+                    
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -299,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // How to Play Button
+                    
                     TextButton(
                       onPressed: () => _showHowToPlay(context),
                       style: TextButton.styleFrom(
@@ -350,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              // Footer text correctly positioned in Stack
+              
               Positioned(
                 bottom: 20,
                 left: 0,

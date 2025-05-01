@@ -44,19 +44,19 @@ class _KeyboardWidgetState extends State<KeyboardWidget> {
     const lettersRow2 = 'ASDFGHJKL';
     const lettersRow3 = 'ZXCVBNM';
     
-    // Get screen dimensions for responsive sizing
+    
     final Size screenSize = MediaQuery.of(context).size;
     final double screenWidth = screenSize.width;
     final double screenHeight = screenSize.height;
     
-    // Adaptive sizing based on device screen size
+    
     final bool isSmallScreen = screenHeight < 600;
     
     return LayoutBuilder(
       builder: (context, constraints) {
         final availableWidth = constraints.maxWidth;
         
-        // Calculate adaptive key sizes based on screen dimensions
+        
         final double keyboardPaddingVertical = isSmallScreen ? 12 : 16;
         final double keyboardPaddingHorizontal = screenWidth * 0.01;
         final double keyRowSpacing = isSmallScreen ? 6 : 8;
@@ -96,39 +96,39 @@ class _KeyboardWidgetState extends State<KeyboardWidget> {
   Widget _buildKeyRow(String letters, double availableWidth, 
       {bool isMiddleRow = false, bool isBottomRow = false}) {
     
-    // Get screen dimensions for responsive sizing
+    
     final Size screenSize = MediaQuery.of(context).size;
     final double screenHeight = screenSize.height;
     final double screenWidth = screenSize.width;
     
-    // Adjust key sizes for different screen sizes
+    
     final bool isSmallScreen = screenHeight < 600;
     final bool isWideScreen = screenWidth > 480;
     
-    // Calculate adaptive key gap based on screen size
+    
     final double keyGap = isSmallScreen ? 4.0 : 6.0;
     
-    // QWERTYUIOP has 10 letters and is our reference for sizing
+    
     final int numLettersInLongestRow = 10; 
     
-    // Calculate key width based on available width and longest row
+    
     final double keyWidth = (availableWidth - (keyGap * (numLettersInLongestRow + 0.5))) / numLettersInLongestRow;
     
-    // Calculate adaptive key height based on screen size
-    final double keyHeight = isSmallScreen 
-        ? screenHeight * 0.056  // Smaller height for small screens
-        : isWideScreen 
-            ? 58.0  // Original height for wide screens
-            : screenHeight * 0.064;  // Slightly taller for normal screens
     
-    // Calculate centering padding for shorter rows
+    final double keyHeight = isSmallScreen 
+        ? screenHeight * 0.056  
+        : isWideScreen 
+            ? 58.0  
+            : screenHeight * 0.064;  
+    
+    
     double sidePadding = 0.0;
     
     if (isMiddleRow) {
-      // ASDFGHJKL has 9 letters (1 less than first row)
+      
       sidePadding = (keyWidth + keyGap) / 2 -1;
     } else if (isBottomRow) {
-      // ZXCVBNM has 7 letters (3 less than first row)
+      
       sidePadding = (keyWidth + keyGap) * 1.5 -2;
     }
 
@@ -164,17 +164,17 @@ class _KeyboardWidgetState extends State<KeyboardWidget> {
     double keyHeight,
     double keyGap,
   ) {
-    // Get screen dimensions to determine text size
+    
     final Size screenSize = MediaQuery.of(context).size;
     final double screenWidth = screenSize.width;
     
-    // Calculate adaptive text size based on screen width
+    
     final double fontSize = screenWidth < 360 ? 16 : 20;
     
-    // Base color
+    
     Color baseColor = Colors.purple.shade700;
     
-    // Determine button color based on state
+    
     Color buttonColor;
     if (!isGuessed) {
       buttonColor = baseColor;
@@ -184,7 +184,7 @@ class _KeyboardWidgetState extends State<KeyboardWidget> {
       buttonColor = Colors.grey.shade600;
     }
 
-    // Create a gradient for a more natural 3D touch effect
+    
     LinearGradient buttonGradient = LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
@@ -248,7 +248,7 @@ class _KeyboardWidgetState extends State<KeyboardWidget> {
       ),
     );
 
-    // Apply animation only to the pressed key
+    
     if (isPressed) {
       return keyButton.animate()
         .scale(

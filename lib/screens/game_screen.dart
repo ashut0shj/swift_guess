@@ -42,20 +42,20 @@ class _GameScreenState extends State<GameScreen> {
   ];
 
   
-  // Game state
+  
   late String _answer;
   List<String> _guessed = [];
   int _lives = 6;
   bool _gameOver = false;
   bool _dialogShown = false;
   int _score = 0;
-  int _hintsUsed = 0;      // Changed from bool to int to track multiple hints
-  int _maxHints = 3;       // Maximum hints allowed per round
+  int _hintsUsed = 0;      
+  int _maxHints = 3;       
   String _difficulty = 'Medium';
   int _highScore = 0;
   bool _isNewHighScore = false;
   
-  // Animation states
+  
   bool _showCelebration = false;
   bool _isRevealingLetters = false;
   late ConfettiController _confettiController;
@@ -83,13 +83,13 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _answer = _songList[Random().nextInt(_songList.length)].toUpperCase();
       _guessed.clear();
-      _hintsUsed = 0;     // Reset hints used
+      _hintsUsed = 0;     
       _showCelebration = false;
       _isRevealingLetters = false;
       _gameOver = false;
       _dialogShown = false;
       
-      // Set max hints based on difficulty
+      
       _maxHints = _difficulty == 'Easy' ? 4 : _difficulty == 'Hard' ? 2 : 3;
     });
   }
@@ -118,9 +118,9 @@ class _GameScreenState extends State<GameScreen> {
     if (allLettersGuessed && !_gameOver) {
       setState(() {
         _gameOver = true;
-        // Calculate score with penalty for hints used
+        
         _score += _lives * (10 - (_hintsUsed * 2));
-        // Ensure minimum score per round
+        
         _score = max(_score, _lives);
       });
       _startWinAnimation();
@@ -144,7 +144,7 @@ class _GameScreenState extends State<GameScreen> {
   }
   
   void _startLoseAnimation() async {
-    // Vibrate on loss
+    
     await SystemChannels.platform.invokeMethod<void>('HapticFeedback.vibrate');
     
     setState(() => _isRevealingLetters = true);
@@ -153,7 +153,7 @@ class _GameScreenState extends State<GameScreen> {
         .where((c) => c != ' ' && !_guessed.contains(c))
         .toList();
 
-    // Reveal letters one by one with animation
+    
     for (final letter in unguessedLetters) {
       await Future.delayed(300.milliseconds);
       if (mounted) {
@@ -161,9 +161,9 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
     
-    // Show overlay with song name
     
-    // Check high score
+    
+    
     if (_score > _highScore) {
       await ScoreRepository.saveHighScore(_score);
       if (mounted) {
@@ -174,7 +174,7 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
     
-    // Important: Add a delay after animations complete
+    
     await Future.delayed(1.seconds);
     
     if (mounted) {
@@ -229,7 +229,7 @@ class _GameScreenState extends State<GameScreen> {
       });
     }
     
-    // Reset score after dialog dismissal for lose case
+    
     if (result == 'lose' && mounted) {
       setState(() {
         _score = 0;
@@ -244,7 +244,7 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
   
-  // Helper method to get hint status text
+  
   String get _hintStatusText {
     return '$_hintsUsed/$_maxHints';
   }
@@ -290,7 +290,7 @@ class _GameScreenState extends State<GameScreen> {
                   
                   return Column(
                     children: [
-                      // Game options section - at the top
+                      
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
@@ -309,7 +309,7 @@ class _GameScreenState extends State<GameScreen> {
                         ),
                       ),
                       
-                      // Hearts display - below game options
+                      
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
@@ -317,13 +317,13 @@ class _GameScreenState extends State<GameScreen> {
                         child: HeartsDisplay(lives: _lives, difficulty: _difficulty),
                       ),
                       
-                      // This expander pushes content down from the top
+                      
                       Expanded(
                         flex: 1,
                         child: SizedBox(),
                       ),
                       
-                      // Word display container - now centered vertically in available space
+                      
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
@@ -340,13 +340,13 @@ class _GameScreenState extends State<GameScreen> {
                         ),
                       ),
                       
-                      // This expander pushes content up from the bottom
+                      
                       Expanded(
                         flex: 1,
                         child: SizedBox(),
                       ),
                       
-                      // Keyboard always at bottom
+                      
                       Padding(
                         padding: EdgeInsets.only(
                           left: horizontalPadding * 0.5,
@@ -368,7 +368,7 @@ class _GameScreenState extends State<GameScreen> {
           ),
         ),
         
-        // Confetti overlay for wins
+        
         if (_showCelebration)
           IgnorePointer(
             child: ConfettiWidget(

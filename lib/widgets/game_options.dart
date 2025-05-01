@@ -11,7 +11,7 @@ class GameOptions extends StatelessWidget {
   final bool gameOver;
   final Function(String) onDifficultyChanged;
   final VoidCallback onHintPressed;
-  final double scaleFactor; // Manual scaling factor
+  final double scaleFactor; 
 
   const GameOptions({
     super.key,
@@ -24,64 +24,64 @@ class GameOptions extends StatelessWidget {
     required this.gameOver,
     required this.onDifficultyChanged,
     required this.onHintPressed,
-    this.scaleFactor = 1.0, // Default scale factor of 1.0
+    this.scaleFactor = 1.0, 
   });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Get screen dimensions for responsive sizing
+        
         final Size screenSize = MediaQuery.of(context).size;
         final double screenWidth = screenSize.width;
         final double screenHeight = screenSize.height;
         
-        // Check for different screen sizes
+        
         final bool isSmallScreen = screenHeight < 600;
         final bool isWideScreen = screenWidth > 480;
         
-        // Apply manual scaling factor to all size values
-        // Base font sizes - will be scaled by scaleFactor
+        
+        
         final double baseFontSize = isSmallScreen ? 12.0 : 16.0;
         final double baseSmallFontSize = isSmallScreen ? 9.0 : 11.0;
         final double baseTinyFontSize = isSmallScreen ? 6.0 : 8.0;
         final double baseIconSize = isSmallScreen ? 12.0 : 14.0;
         final double baseSmallIconSize = isSmallScreen ? 10.0 : 12.0;
         
-        // Apply scale factor to get final sizes
+        
         final double fontSize = baseFontSize * scaleFactor;
         final double smallFontSize = baseSmallFontSize * scaleFactor;
         final double tinyFontSize = baseTinyFontSize * scaleFactor;
         final double iconSize = baseIconSize * scaleFactor;
         final double smallIconSize = baseSmallIconSize * scaleFactor;
         
-        // Padding and spacing with scale factor applied
+        
         final double horizontalPadding = 8.0 * scaleFactor;
         final double verticalPadding = 6.0 * scaleFactor;
         final double containerBorderRadius = 8.0 * scaleFactor;
         final double itemSpacing = 4.0 * scaleFactor;
         
-        // Calculate width based on container and scale factor
+        
         final double availableWidth = constraints.maxWidth;
         
-        // Adjust element width based on screen size and scale factor
+        
         double elementWidth;
         if (isWideScreen) {
-          // For wider screens, use less percentage of total width
+          
           elementWidth = math.min((availableWidth / 3.5), 120.0 * scaleFactor);
         } else {
-          // For narrower screens, allow elements to take more space
+          
           elementWidth = math.min((availableWidth / 3.2), 100.0 * scaleFactor);
         }
         
-        // Ensure minimum and maximum size constraints
+        
         elementWidth = math.max(elementWidth, 60.0 * scaleFactor);
         elementWidth = math.min(elementWidth, 160.0 * scaleFactor);
         
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Difficulty dropdown
+            
             SizedBox(
               width: elementWidth,
               child: Container(
@@ -124,7 +124,7 @@ class GameOptions extends StatelessWidget {
               ),
             ),
             
-            // Score display
+            
             SizedBox(
               width: elementWidth,
               child: Container(
@@ -182,7 +182,7 @@ class GameOptions extends StatelessWidget {
               ),
             ),
             
-            // Hint button with counter
+            
             SizedBox(
               width: elementWidth,
               child: ElevatedButton(

@@ -4,18 +4,18 @@ import 'screens/home_screen.dart';
 import 'jingle_player.dart';
 
 void main() {
-  // Wrap everything in a try-catch to prevent crashes in release mode
+  
   try {
-    // Ensure bindings are initialized first
+    
     WidgetsFlutterBinding.ensureInitialized();
     
-    // Play jingle in a non-blocking way
+    
     _playJingleSafely();
     
-    // Start the app
+    
     runApp(const SwiftieGame());
   } catch (e) {
-    // Fallback for any initialization errors
+    
     print('Error in initialization: $e');
     runApp(MaterialApp(
       home: Scaffold(
@@ -32,7 +32,7 @@ void main() {
   }
 }
 
-// Play jingle without blocking UI thread
+
 void _playJingleSafely() {
   try {
     JinglePlayer().play().catchError((e) {

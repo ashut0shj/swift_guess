@@ -12,7 +12,7 @@ class JinglePlayer {
   JinglePlayer._internal() {
     _player = AudioPlayer();
     _player.setReleaseMode(ReleaseMode.loop);
-    // Don't call _init() here - we'll call it lazily when needed
+    
   }
 
   Future<void> _init() async {
@@ -25,7 +25,7 @@ class JinglePlayer {
       _isInitialized = true;
     } catch (e) {
       print('Error initializing audio player: $e');
-      // Set initialized to true anyway to prevent repeated init attempts
+      
       _isInitialized = true;
     }
   }

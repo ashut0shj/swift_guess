@@ -6,52 +6,52 @@ import 'dart:math' as math;
 class HeartsDisplay extends StatelessWidget {
   final int lives;
   final String difficulty;
-  final double scaleFactor; // Manual scaling factor
+  final double scaleFactor; 
 
   const HeartsDisplay({
     super.key,
     required this.lives,
     required this.difficulty,
-    this.scaleFactor = 1, // Default scale factor of 1.0
+    this.scaleFactor = 1, 
   });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Get screen dimensions for responsive sizing
+        
         final Size screenSize = MediaQuery.of(context).size;
         final double screenWidth = screenSize.width;
         final double screenHeight = screenSize.height;
         
-        // Check for different screen sizes
+        
         final bool isSmallScreen = screenHeight < 600;
         final bool isWideScreen = screenWidth > 480;
         
-        // Base sizes before applying scale factor
+        
         final double baseFontSize = isSmallScreen ? 14.0 : 16.0;
         final double baseHeartSize = isSmallScreen ? 14.0 : 16.0;
         
-        // Apply scale factor
+        
         final double fontSize = baseFontSize * scaleFactor;
         double heartSize = baseHeartSize * scaleFactor;
         
-        // Calculate padding with scale factor
+        
         final double verticalPadding = 6.0 * scaleFactor;
         final double horizontalPadding = 12.0 * scaleFactor;
         final double heartSpacing = 3.0 * scaleFactor;
         final double borderRadius = 16.0 * scaleFactor;
         
-        // Determine total hearts based on difficulty
+        
         int totalHearts = difficulty == 'Easy' ? 8 : difficulty == 'Hard' ? 4 : 6;
         
-        // For many hearts, adjust heart size to fit properly
+        
         if (totalHearts > 6) {
-          // Calculate dynamic adjustment based on available width
-          double availableWidth = constraints.maxWidth - (horizontalPadding * 2) - (fontSize * 4); // Approx space for "Lives: " text
+          
+          double availableWidth = constraints.maxWidth - (horizontalPadding * 2) - (fontSize * 4); 
           double maxHeartWidth = availableWidth / totalHearts;
           
-          // Apply constraint if necessary
+          
           if (heartSize > maxHeartWidth) {
             double adjustmentRatio = maxHeartWidth / heartSize;
             heartSize *= math.min(adjustmentRatio, 1.0);
@@ -123,4 +123,4 @@ class HeartsDisplay extends StatelessWidget {
   }
 }
 
-// Import math for min function
+
