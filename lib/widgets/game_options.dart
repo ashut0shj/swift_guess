@@ -11,7 +11,7 @@ class GameOptions extends StatelessWidget {
   final bool gameOver;
   final Function(String) onDifficultyChanged;
   final VoidCallback onHintPressed;
-  final double scaleFactor; 
+  final double scaleFactor;
 
   const GameOptions({
     super.key,
@@ -24,64 +24,65 @@ class GameOptions extends StatelessWidget {
     required this.gameOver,
     required this.onDifficultyChanged,
     required this.onHintPressed,
-    this.scaleFactor = 1.0, 
+    this.scaleFactor = 1.0,
   });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        
+        // Get screen dimensions
         final Size screenSize = MediaQuery.of(context).size;
         final double screenWidth = screenSize.width;
         final double screenHeight = screenSize.height;
         
-        
+        // Determine screen type
         final bool isSmallScreen = screenHeight < 600;
         final bool isWideScreen = screenWidth > 480;
         
+        // Calculate responsive base dimensions
+        final double baseFontSize = math.min(
+          isSmallScreen ? 12.0 : 14.0,
+          constraints.maxWidth / 25
+        );
         
+        final double baseIconSize = math.min(
+          isSmallScreen ? 14.0 : 16.0,
+          constraints.maxWidth / 30
+        );
         
-        final double baseFontSize = isSmallScreen ? 12.0 : 16.0;
-        final double baseSmallFontSize = isSmallScreen ? 9.0 : 11.0;
-        final double baseTinyFontSize = isSmallScreen ? 6.0 : 8.0;
-        final double baseIconSize = isSmallScreen ? 12.0 : 14.0;
-        final double baseSmallIconSize = isSmallScreen ? 10.0 : 12.0;
-        
-        
+        // Apply scale factor to base dimensions
         final double fontSize = baseFontSize * scaleFactor;
-        final double smallFontSize = baseSmallFontSize * scaleFactor;
-        final double tinyFontSize = baseTinyFontSize * scaleFactor;
+        final double smallFontSize = fontSize * 0.75;
+        final double tinyFontSize = fontSize * 0.55;
         final double iconSize = baseIconSize * scaleFactor;
-        final double smallIconSize = baseSmallIconSize * scaleFactor;
+        final double smallIconSize = iconSize * 0.8;
         
-        
-        final double horizontalPadding = 8.0 * scaleFactor;
-        final double verticalPadding = 6.0 * scaleFactor;
-        final double containerBorderRadius = 8.0 * scaleFactor;
-        final double itemSpacing = 4.0 * scaleFactor;
-        
-        
+        // Calculate padding based on available space
         final double availableWidth = constraints.maxWidth;
+        final double horizontalPadding = math.max(4.0, availableWidth / 60) * scaleFactor;
+        final double verticalPadding = math.max(3.0, availableWidth / 80) * scaleFactor;
+        final double containerBorderRadius = math.max(6.0, availableWidth / 60) * scaleFactor;
+        final double itemSpacing = math.max(2.0, availableWidth / 120) * scaleFactor;
         
+        // Calculate responsive element width
+        final double maxElementWidth = isWideScreen ? 140.0 : 120.0;
+        final double minElementWidth = isWideScreen ? 70.0 : 60.0;
         
-        double elementWidth;
-        if (isWideScreen) {
-          
-          elementWidth = math.min((availableWidth / 3.5), 120.0 * scaleFactor);
-        } else {
-          
-          elementWidth = math.min((availableWidth / 3.2), 100.0 * scaleFactor);
-        }
+        // Adapt element width based on available space
+        double elementWidth = math.min(
+          (availableWidth / 3.2),
+          maxElementWidth * scaleFactor
+        );
         
-        
-        elementWidth = math.max(elementWidth, 60.0 * scaleFactor);
-        elementWidth = math.min(elementWidth, 160.0 * scaleFactor);
-        
+        // Ensure minimum and maximum bounds
+        elementWidth = math.max(elementWidth, minElementWidth * scaleFactor);
+        elementWidth = math.min(elementWidth, availableWidth / 3);
+
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            
+            // Difficulty Dropdown
             SizedBox(
               width: elementWidth,
               child: Container(
@@ -95,13 +96,13 @@ class GameOptions extends StatelessWidget {
                   dropdownColor: Colors.purple.shade900,
                   underline: Container(),
                   isExpanded: true,
-                  itemHeight: kMinInteractiveDimension * (scaleFactor > 0.8 ? scaleFactor : 0.8),
+                  itemHeight: null, // Let Flutter calculate the optimal height
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: fontSize - (4 * scaleFactor),
+                    fontSize: fontSize,
                   ),
                   icon: Icon(
-                    Icons.arrow_drop_down, 
+                    Icons.arrow_drop_down,
                     color: Colors.white,
                     size: fontSize * 1.2,
                   ),
@@ -124,12 +125,12 @@ class GameOptions extends StatelessWidget {
               ),
             ),
             
-            
+            // Score Display
             SizedBox(
               width: elementWidth,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  vertical: verticalPadding, 
+                  vertical: verticalPadding,
                   horizontal: horizontalPadding,
                 ),
                 decoration: BoxDecoration(
@@ -143,17 +144,20 @@ class GameOptions extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.star, 
-                          color: Colors.amber, 
+                          Icons.star,
+                          color: Colors.amber,
                           size: iconSize
                         ),
                         SizedBox(width: itemSpacing),
-                        Text(
-                          '$score',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.bold,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '$score',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
@@ -163,16 +167,19 @@ class GameOptions extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.leaderboard, 
-                          color: Colors.purpleAccent, 
+                          Icons.leaderboard,
+                          color: Colors.purpleAccent,
                           size: smallIconSize
                         ),
                         SizedBox(width: itemSpacing / 2),
-                        Text(
-                          '$highScore',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: smallFontSize,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '$highScore',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: smallFontSize,
+                            ),
                           ),
                         ),
                       ],
@@ -182,7 +189,7 @@ class GameOptions extends StatelessWidget {
               ),
             ),
             
-            
+            // Hint Button
             SizedBox(
               width: elementWidth,
               child: ElevatedButton(
@@ -192,7 +199,7 @@ class GameOptions extends StatelessWidget {
                   foregroundColor: Colors.black87,
                   disabledBackgroundColor: Colors.grey.shade400,
                   padding: EdgeInsets.symmetric(
-                    horizontal: horizontalPadding, 
+                    horizontal: horizontalPadding,
                     vertical: verticalPadding
                   ),
                 ),
@@ -208,11 +215,14 @@ class GameOptions extends StatelessWidget {
                           'Hint',
                           style: TextStyle(fontSize: smallFontSize),
                         ),
-                        Text(
-                          hintStatus,
-                          style: TextStyle(
-                            fontSize: tinyFontSize,
-                            fontWeight: FontWeight.bold,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            hintStatus,
+                            style: TextStyle(
+                              fontSize: tinyFontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
