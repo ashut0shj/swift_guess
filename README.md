@@ -7,7 +7,7 @@
 
 ## 📥 Download
 
-[[Download APK](https://img.shields.io/badge/download-apk-blue.svg)](https://github.com/ashut0shj/swift_guess/releases/download/v1.7/app-release.apk)
+[Download APK](https://github.com/ashut0shj/swift_guess/releases/download/v1.7/app-release.apk)
 
 
 ## 📱 About
