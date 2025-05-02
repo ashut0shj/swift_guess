@@ -1,7 +1,7 @@
 # Swift Guess
 
 <div align="center">
-  <img src="/https://github.com/ashut0shj/swift_guess/blob/master/assets/images/home_image.png" alt="Swift Guess Logo" />
+  <img src="assets/images/home_image.png" alt="Swift Guess Logo" />
   <h3>A Taylor Swift song guessing game for Swifties of all levels</h3>
 </div>
 
