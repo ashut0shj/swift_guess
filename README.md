@@ -1,16 +1,116 @@
-# swift_guess
+# Swift Guess
 
-A new Flutter project.
+<div align="center">
+  <img src="/api/placeholder/400/150" alt="Swift Guess Logo" />
+  <h3>A Taylor Swift song guessing game for Swifties of all levels</h3>
+</div>
 
-## Getting Started
+## 📱 About
 
-This project is a starting point for a Flutter application.
+Swift Guess is a Flutter-based mobile game where players test their knowledge of Taylor Swift songs by guessing titles letter by letter. With beautiful UI, multiple difficulty levels, and engaging gameplay, it provides entertainment for casual listeners and die-hard Swifties alike.
 
-A few resources to get you started if this is your first Flutter project:
+## ✨ Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Engaging Gameplay**: Guess Taylor Swift song titles letter by letter
+- **Multiple Difficulty Levels**: Choose between Easy, Medium, and Hard modes
+- **Hint System**: Use hints strategically when you get stuck
+- **Score Tracking**: Compete against yourself with a high score system
+- **Beautiful UI**: Enjoy a visually appealing interface with Taylor Swift-inspired colors
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🎮 How To Play
+
+1. **Select a Difficulty Level**:
+   - **Easy**: 8 hearts & 4 hints - Perfect for casual fans
+   - **Medium**: 6 hearts & 3 hints - For the regular Swifties
+   - **Hard**: 4 hearts & 2 hints - For the die-hard fans
+
+2. **Guess the Song**:
+   - Choose letters to reveal parts of the hidden song title
+   - Each incorrect guess costs you one heart
+   - Use hints to reveal random letters when you're stuck
+   - Complete the title before running out of hearts
+
+3. **Scoring System**:
+   - Base score for each completed song
+   - Bonus points for remaining hearts
+   - Penalty for using hints
+   - Try to beat your personal best!
+
+## 💡 Pro Tips
+
+- Start with vowels (A, E, I, O, U)
+- Try common letters like T, S, R, N for Taylor Swift songs
+- Save your hints for when you're truly stuck
+
+## 🛠️ Technical Details
+
+### Requirements
+
+- Flutter SDK
+- Dart
+- Android Studio / Xcode (for deployment)
+
+### Dependencies
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  # Add other dependencies your project uses
+```
+
+### Project Structure
+
+```
+lib/
+├── main.dart
+├── screens/
+│   ├── home_screen.dart
+│   ├── game_screen.dart
+│   ├── how_to_play_screen.dart
+│   └── results_screen.dart
+├── models/
+│   └── song_data.dart
+├── widgets/
+│   └── ...
+└── utils/
+    └── ...
+```
+
+## 🚀 Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/swift-guess.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd swift-guess
+   ```
+
+3. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+
+4. Run the app:
+   ```bash
+   flutter run
+   ```
+
+## 📝 License
+
+[MIT License](LICENSE)
+
+## 🙏 Acknowledgements
+
+- Taylor Swift for the amazing songs
+- Flutter community for support and resources
+- All Swifties who beta-tested the game
+
+---
+
+<div align="center">
+  Made with 💜 for Swifties everywhere
+</div>
