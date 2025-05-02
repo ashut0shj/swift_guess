@@ -5,6 +5,11 @@
   <h3>A Taylor Swift song guessing game for Swifties of all levels</h3>
 </div>
 
+## 📥 Download
+
+[[Download APK](https://img.shields.io/badge/download-apk-blue.svg)](https://github.com/ashut0shj/swift_guess/releases/download/v1.7/app-release.apk)
+
+
 ## 📱 About
 
 Swift Guess is a Flutter-based mobile game where players test their knowledge of Taylor Swift songs by guessing titles letter by letter. With beautiful UI, multiple difficulty levels, and engaging gameplay, it provides entertainment for casual listeners and die-hard Swifties alike.
