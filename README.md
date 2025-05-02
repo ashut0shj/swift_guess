@@ -1,7 +1,7 @@
 # Swift Guess
 
 <div align="center">
-  <img src="/api/placeholder/400/150" alt="Swift Guess Logo" />
+  <img src="/https://github.com/ashut0shj/swift_guess/blob/master/assets/images/home_image.png" alt="Swift Guess Logo" />
   <h3>A Taylor Swift song guessing game for Swifties of all levels</h3>
 </div>
 
@@ -36,12 +36,6 @@ Swift Guess is a Flutter-based mobile game where players test their knowledge of
    - Penalty for using hints
    - Try to beat your personal best!
 
-## 💡 Pro Tips
-
-- Start with vowels (A, E, I, O, U)
-- Try common letters like T, S, R, N for Taylor Swift songs
-- Save your hints for when you're truly stuck
-
 ## 🛠️ Technical Details
 
 ### Requirements
@@ -56,7 +50,12 @@ Swift Guess is a Flutter-based mobile game where players test their knowledge of
 dependencies:
   flutter:
     sdk: flutter
-  # Add other dependencies your project uses
+  google_fonts: ^6.1.0
+  flutter_animate: ^4.5.0
+  confetti: ^0.8.0
+  lottie: ^3.0.0
+  shared_preferences: ^2.2.2
+  audioplayers: ^6.4.0
 ```
 
 ### Project Structure
@@ -99,9 +98,7 @@ lib/
    flutter run
    ```
 
-## 📝 License
 
-[MIT License](LICENSE)
 
 ## 🙏 Acknowledgements
 
