@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // If image is not loaded yet, show loading screen
+    
     if (!_imageLoaded) {
       return Scaffold(
         body: Container(
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        // Game logo/icon
+        
         Container(
           decoration: BoxDecoration(
             color: Colors.purple.shade900.withOpacity(0.6),
