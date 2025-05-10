@@ -293,7 +293,7 @@ class _GameScreenState extends State<GameScreen> {
                   errorBuilder: (context, error, stackTrace) => const Icon(Icons.music_note),
                 ),
                 SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                const Text('Swift Guess', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white,)),
+                const Text('Swiftldkmcfl Guess', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white,)),
               ],
             ),
             centerTitle: true,
