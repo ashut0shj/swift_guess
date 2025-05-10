@@ -19,10 +19,8 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  static const List<String> _songList = SongData.taylorSwiftSongs;
   
-
-  
+  static final List<String> _songList = SongData.taylorSwiftSongs;
   
   late String _answer;
   List<String> _guessed = [];
@@ -36,6 +34,9 @@ class _GameScreenState extends State<GameScreen> {
   int _highScore = 0;
   bool _isNewHighScore = false;
   
+  
+  bool _showHint = false;
+  String? _currentHint;
   
   bool _showCelebration = false;
   bool _isRevealingLetters = false;
@@ -69,7 +70,8 @@ class _GameScreenState extends State<GameScreen> {
       _isRevealingLetters = false;
       _gameOver = false;
       _dialogShown = false;
-      
+      _showHint = false;
+      _currentHint = null;
       
       _maxHints = _difficulty == 'Easy' ? 4 : _difficulty == 'Hard' ? 2 : 3;
     });
@@ -142,9 +144,6 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
     
-    
-    
-    
     if (_score > _highScore) {
       await ScoreRepository.saveHighScore(_score);
       if (mounted) {
@@ -155,7 +154,6 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
     
-    
     await Future.delayed(1.seconds);
     
     if (mounted) {
@@ -164,8 +162,33 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
   
+  
   void _useHint() {
     if (_hintsUsed >= _maxHints || _gameOver || _isRevealingLetters) return;
+    
+    
+    if (_hintsUsed == 0) {
+      setState(() {
+        _hintsUsed++;
+        _showHint = true;
+        _currentHint = SongData.songDictionary[_answer];
+      });
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      return;
+    }
+    
     
     List<String> unguessedLetters = _answer.split('')
         .where((c) => c != ' ' && !_guessed.contains(c))
@@ -210,7 +233,6 @@ class _GameScreenState extends State<GameScreen> {
       });
     }
     
-    
     if (result == 'lose' && mounted) {
       setState(() {
         _score = 0;
@@ -225,16 +247,17 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
   
-  
   String get _hintStatusText {
-    return '$_hintsUsed/$_maxHints';
+    String baseText = '$_hintsUsed/$_maxHints';
+    if (_showHint && _currentHint != null && _hintsUsed > 0) {
+      return '$baseText (Hint revealed)';
+    }
+    return baseText;
   }
-  
   
   void _playNextJingle() {
     try {
       JinglePlayer().playRandom().then((_) {
-        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -305,7 +328,6 @@ class _GameScreenState extends State<GameScreen> {
                   
                   return Column(
                     children: [
-                      
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
@@ -324,7 +346,6 @@ class _GameScreenState extends State<GameScreen> {
                         ),
                       ),
                       
-                      
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
@@ -333,11 +354,35 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                       
                       
+                      if (_showHint && _currentHint != null)
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: horizontalPadding * 1.5,
+                            vertical: constraints.maxHeight * 0.02,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.purple.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.pink.shade200, width: 1),
+                            ),
+                            child: Text(
+                              'HINT: $_currentHint',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      
                       Expanded(
-                        flex: 1,
+                        flex: _showHint && _currentHint != null ? 1 : 2,
                         child: SizedBox(),
                       ),
-                      
                       
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -355,12 +400,10 @@ class _GameScreenState extends State<GameScreen> {
                         ),
                       ),
                       
-                      
                       Expanded(
                         flex: 1,
                         child: SizedBox(),
                       ),
-                      
                       
                       Padding(
                         padding: EdgeInsets.only(
@@ -382,7 +425,6 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
         ),
-        
         
         if (_showCelebration)
           IgnorePointer(
