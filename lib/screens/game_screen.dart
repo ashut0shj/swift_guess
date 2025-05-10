@@ -10,6 +10,7 @@ import '../widgets/game_options.dart';
 import '../widgets/game_over_dialog.dart';
 import '../data/score_repository.dart';
 import '../data/words.dart';
+import '../jingle_player.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -229,6 +230,28 @@ class _GameScreenState extends State<GameScreen> {
     return '$_hintsUsed/$_maxHints';
   }
   
+  
+  void _playNextJingle() {
+    try {
+      JinglePlayer().playRandom().then((_) {
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Now playing: ${JinglePlayer().currentJingleName}',
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.purple.shade800,
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      });
+    } catch (e) {
+      print('Error playing next jingle: $e');
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -251,6 +274,18 @@ class _GameScreenState extends State<GameScreen> {
               ],
             ),
             centerTitle: true,
+            
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.skip_next,
+                  color: Colors.pink.shade200,
+                  size: 28,
+                ),
+                tooltip: 'Play Next Jingle',
+                onPressed: _playNextJingle,
+              ),
+            ],
           ),
           body: Container(
             decoration: BoxDecoration(
