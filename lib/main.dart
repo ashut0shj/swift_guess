@@ -4,18 +4,14 @@ import 'screens/home_screen.dart';
 import 'jingle_player.dart';
 
 void main() {
-  
   try {
-    
     WidgetsFlutterBinding.ensureInitialized();
     
     
     _playJingleSafely();
     
-    
     runApp(const SwiftieGame());
   } catch (e) {
-    
     print('Error in initialization: $e');
     runApp(MaterialApp(
       home: Scaffold(
@@ -23,7 +19,7 @@ void main() {
         body: Center(
           child: Text(
             'Something went wrong. Please restart the app.',
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
             textAlign: TextAlign.center,
           ),
         ),
@@ -32,14 +28,16 @@ void main() {
   }
 }
 
-
 void _playJingleSafely() {
   try {
-    JinglePlayer().play().catchError((e) {
-      print('Jingle player error: $e');
+    
+    Future.delayed(const Duration(milliseconds: 500), () {
+      JinglePlayer().playRandom().catchError((e) {
+        print('Jingle player error: $e');
+      });
     });
   } catch (e) {
-    print('Error playing jingle: $e');
+    print('Error setting up jingle player: $e');
   }
 }
 
@@ -49,7 +47,7 @@ class SwiftieGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Swiftie Game',
+      title: 'Swift Guess',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFF1E1B2E),

@@ -14,21 +14,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _highScore = 0;
   bool _isMusicMuted = false;
-  bool _areSfxMuted = false;
   bool _imageLoaded = false;
+  String _currentJingle = '';
+  List<String> _availableJingles = [];
 
   @override
   void initState() {
     super.initState();
     _loadHighScore();
-    
+    _loadJingleInfo();
+  }
+
+  void _loadJingleInfo() {
     try {
       _isMusicMuted = JinglePlayer().isMuted;
-      _areSfxMuted = JinglePlayer().isMuted;
+      _availableJingles = JinglePlayer().availableJingles;
+      _currentJingle = JinglePlayer().currentJingleName;
+      setState(() {}); 
     } catch (e) {
       print('Error getting jingle player state: $e');
       _isMusicMuted = false;
-      _areSfxMuted = false;
+      _currentJingle = '';
     }
   }
 
@@ -79,9 +85,32 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _changeJingle(String jingleName) {
+    try {
+      JinglePlayer().setJingleByName(jingleName);
+      setState(() {
+        _currentJingle = jingleName;
+      });
+    } catch (e) {
+      print('Error changing jingle: $e');
+    }
+  }
+
+  void _playRandomJingle() {
+    try {
+      JinglePlayer().playRandom().then((_) {
+        
+        setState(() {
+          _currentJingle = JinglePlayer().currentJingleName;
+        });
+      });
+    } catch (e) {
+      print('Error playing random jingle: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    
     if (!_imageLoaded) {
       return Scaffold(
         body: Container(
@@ -145,7 +174,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        
         Container(
           decoration: BoxDecoration(
             color: Colors.purple.shade900.withOpacity(0.6),
@@ -193,7 +221,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        
       ],
     );
   }
@@ -282,60 +309,136 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildAudioControlsSection() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       decoration: BoxDecoration(
         color: Colors.purple.shade900.withOpacity(0.3),
         borderRadius: BorderRadius.circular(30),
       ),
-      child: Row(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildAudioButton(
-            _isMusicMuted ? Icons.music_off : Icons.music_note,
-            'Music',
-            () {
-              try {
-                JinglePlayer().toggleMute();
-                setState(() {
-                  _isMusicMuted = !_isMusicMuted;
-                });
-              } catch (e) {
-                print('Error toggling mute: $e');
-              }
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildMusicButton(),
+              const SizedBox(width: 20),
+              _buildRandomJingleButton(),
+            ],
           ),
-          const SizedBox(width: 24),
-          _buildAudioButton(
-            _areSfxMuted ? Icons.volume_off : Icons.volume_up,
-            'Sound FX',
-            () {
-              setState(() {
-                _areSfxMuted = !_areSfxMuted;
-              });
-            },
-          ),
+          const SizedBox(height: 16),
+          _buildJingleSelector(),
         ],
       ),
     );
   }
 
-  Widget _buildAudioButton(IconData icon, String label, VoidCallback onPressed) {
+  Widget _buildMusicButton() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
           iconSize: 30,
           icon: Icon(
-            icon,
+            _isMusicMuted ? Icons.music_off : Icons.music_note,
             color: Colors.pink.shade200,
           ),
-          onPressed: onPressed,
+          onPressed: () {
+            try {
+              JinglePlayer().toggleMute();
+              setState(() {
+                _isMusicMuted = !_isMusicMuted;
+              });
+            } catch (e) {
+              print('Error toggling mute: $e');
+            }
+          },
         ),
-        Text(
-          label,
-          style: const TextStyle(
+        const Text(
+          'Music',
+          style: TextStyle(
             fontSize: 12,
             color: Colors.white70,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRandomJingleButton() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          iconSize: 30,
+          icon: Icon(
+            Icons.shuffle,
+            color: Colors.pink.shade200,
+          ),
+          onPressed: _playRandomJingle,
+        ),
+        const Text(
+          'Random',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.white70,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildJingleSelector() {
+    if (_availableJingles.isEmpty) {
+      return const SizedBox();
+    }
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text(
+          'Select Jingle:',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.purple.shade800.withOpacity(0.7),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.pink.shade200, width: 1),
+          ),
+          child: DropdownButton<String>(
+            value: _currentJingle.isNotEmpty ? _currentJingle : _availableJingles.first,
+            isExpanded: true,
+            dropdownColor: Colors.purple.shade800,
+            underline: const SizedBox(),
+            style: TextStyle(
+              color: Colors.pink.shade200,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            icon: Icon(
+              Icons.music_note,
+              color: Colors.pink.shade200,
+            ),
+            items: _availableJingles.map((String jingle) {
+              return DropdownMenuItem<String>(
+                value: jingle,
+                child: Text(
+                  jingle,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                _changeJingle(newValue);
+              }
+            },
           ),
         ),
       ],
