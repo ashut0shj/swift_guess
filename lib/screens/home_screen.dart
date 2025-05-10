@@ -3,6 +3,7 @@
   import 'how_to_play.dart';
   import '../data/score_repository.dart';
   import '../jingle_player.dart';
+  import 'datapush.dart';  
 
   class HomeScreen extends StatefulWidget {
     const HomeScreen({super.key});
@@ -445,14 +446,27 @@
       );
     }
 
-    Widget _buildFooterSection() {
-      return Text(
+Widget _buildFooterSection() {
+  return Column(
+    children: [
+      // ElevatedButton(
+      //   onPressed: () async {
+      //     await uploadSongsToFirebase();
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(content: Text('Songs uploaded to Firebase!')),
+      //     );
+      //   },
+      //   child: Text('Upload Songs to Firebase'),
+      // ),
+      SizedBox(height: 10),
+      Text(
         '~ ashut0sh ❤️',
         style: TextStyle(
           fontSize: 12,
           color: Colors.white.withOpacity(0.5),
           fontStyle: FontStyle.italic,
         ),
-      );
-    }
-  }
+      ),
+    ],
+  );
+}}

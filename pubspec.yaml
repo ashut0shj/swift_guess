@@ -14,7 +14,10 @@ dependencies:
   lottie: ^3.0.0
   shared_preferences: ^2.2.2
   audioplayers: ^6.4.0
-
+  firebase_core: ^2.15.1
+  cloud_firestore: ^4.9.1
+  connectivity_plus: ^4.0.2
+  firebase_auth: ^4.17.4 
 
 
 dev_dependencies:

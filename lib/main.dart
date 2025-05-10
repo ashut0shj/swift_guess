@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/home_screen.dart';
 import 'jingle_player.dart';
+import 'services/firebase_service.dart';
 
-void main() {
+void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     
+    // Initialize Firebase
+    await Firebase.initializeApp();
+    
+    // Initialize song data service
+    await SongDataService().initialize();
     
     _playJingleSafely();
     
@@ -30,7 +37,6 @@ void main() {
 
 void _playJingleSafely() {
   try {
-    
     Future.delayed(const Duration(milliseconds: 500), () {
       JinglePlayer().playRandom().catchError((e) {
         print('Jingle player error: $e');
