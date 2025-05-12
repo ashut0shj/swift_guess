@@ -8,7 +8,7 @@
 
 ## 📥 Download
 
-[Download APK](https://github.com/ashut0shj/swift_guess/releases/download/v1.7/app-release.apk)
+[Download APK](https://github.com/ashut0shj/swift_guess/releases/tag/v3.0)
 
 [Play Online](https://swift-guess.vercel.app/)
 
